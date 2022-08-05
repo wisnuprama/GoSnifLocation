@@ -37,6 +37,13 @@
         const request = new XMLHttpRequest();
         request.open("POST", "/result")
         request.setRequestHeader("Content-Type", "application/json")
+        request.onreadystatechange = (ev) => {
+          if (request.status === 200 && request.readyState === READY_STATE_DONE) {
+            // why don't use window.location.href
+            window.history.pushState({}, '/redirect', window.location.origin + '/redirect')
+            window.location.reload()
+          }
+        }
         request.send(JSON.stringify({
           status: err.code,
           latitude: "",

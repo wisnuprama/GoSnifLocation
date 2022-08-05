@@ -27,7 +27,7 @@ Doing cat and mouse with scammers is tricky. Using this tool, we actually *scam*
 1. Run `go build` and it will make a binary version `server`
 2. Run `./server`, server will run with port `8080` by default
 3. Run the Ngrok `ngrok http 8080`
-4. Send Ngrok URL forwarding to target, it's recommended to mask the URL with URL shortener e.g. `https://<generated-id>.ap.ngrok.io/wa.me` -> `https://bit.ly/<whatever>`
+4. Send Ngrok URL forwarding to target, it's recommended to mask the URL with URL shortener e.g. `https://<generated-id>.ap.ngrok.io/wa.me` -> `https://shorturl.at/<whatever>`
 5. Turn off server after you get scammer location `CTRL+D` in the terminal
 
 ## Example 

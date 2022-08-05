@@ -1,3 +1,3 @@
-module snif-location/web
+module GoSnifLocation/server
 
 go 1.19

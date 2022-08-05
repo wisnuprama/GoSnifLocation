@@ -25,10 +25,6 @@ const (
 	TIMEOUT           GeoErrorCode = 3
 )
 
-type Context struct {
-	done int
-}
-
 type Result struct {
 	status string
 }
@@ -90,9 +86,11 @@ func ResultHandler(response http.ResponseWriter, request *http.Request) {
 
 	if geoInfo.Status != SUCCESS {
 		log.Println("["+request.RemoteAddr+"]", "Error Result:", geoInfo.Status)
+		return;
+	} else {
+		log.Println("["+request.RemoteAddr+"]", "Result:", geoInfo.GenerateGMapsURL())
 	}
-
-	log.Println("["+request.RemoteAddr+"]", "Result:", geoInfo.GenerateGMapsURL())
+	
 	response.WriteHeader(http.StatusOK)
 	fmt.Fprintf(response, "Ok")
 }

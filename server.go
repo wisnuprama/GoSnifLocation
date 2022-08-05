@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -14,7 +15,7 @@ const SERVER_PORT int32 = 8080
 
 const TEMPLATE_NAME string = "whatsapp.html"
 const FINAL_REDIRECTION string = "https://api.whatsapp.com/?lang=en"
-const GMAPS_URL string = "https://google.com/maps/place"
+const GMAPS_URL string = "https://google.com/maps/search/?api=1&query=<lat>,<lng>"
 
 type GeoErrorCode int8
 
@@ -36,7 +37,7 @@ type GeoLocationInfo struct {
 }
 
 func (g *GeoLocationInfo) GenerateGMapsURL() string {
-	return GMAPS_URL + "/" + g.Longitude + "," + g.Latitude
+	return strings.Replace(strings.Replace(GMAPS_URL, "<lat>", g.Latitude, 1), "<lng>", g.Longitude, 1)
 }
 
 type TargetUser struct {

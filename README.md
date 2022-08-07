@@ -1,5 +1,7 @@
 # GoSnifLocation
 
+[![Go](https://github.com/wisnuprama/GoSnifLocation/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/wisnuprama/GoSnifLocation/actions/workflows/go.yml)
+
 > Where are you, scammers? :)
 
 Use this to track scammer location.
